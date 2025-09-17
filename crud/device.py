@@ -23,7 +23,7 @@ async def get_device_type_by_name(db: AsyncSession, name: str) -> Optional[Devic
     return result.scalars().first()
 
 async def get_device_types(db: AsyncSession, skip: int = 0, limit: int = 100):
-    result = await db.execute(select(DeviceType)).offset(skip).limit(limit)
+    result = await db.execute(select(DeviceType).offset(skip).limit(limit))
     return result.scalars().all()
 
 async def create_device_type(db: AsyncSession, device_type_in: DeviceTypeCreate):
