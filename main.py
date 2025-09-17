@@ -1,7 +1,7 @@
 from fastapi import APIRouter, FastAPI
 from contextlib import asynccontextmanager
 
-from api.v1 import users
+from api.v1 import users, devices
 
 
 @asynccontextmanager
@@ -16,6 +16,7 @@ app = FastAPI(lifespan=lifespan)
 
 main_router = APIRouter()
 main_router.include_router(users.router)
+main_router.include_router(devices.router)
 
 app.include_router(main_router, prefix="/api/v1")
 

@@ -11,6 +11,7 @@ from config import settings
 
 from models.base import Base
 from models.user import User, Profile
+from models.device import DeviceType, DeviceModel, DeviceManufacturer, Device
 
 
 # this is the Alembic Config object, which provides

@@ -29,18 +29,17 @@ class DeviceTypeBase(BaseModel):
 
 class DeviceTypeRead(DeviceTypeBase):
     id: uuid.UUID
-    device_model: DeviceModelRead
 
     class Config:
         orm_mode = True
 
 
 class DeviceTypeCreate(DeviceTypeBase):
-     device_model: DeviceModelRead
+    pass
 
 
 class DeviceTypeUpdate(DeviceTypeBase):
-     device_model: DeviceModelRead
+     pass
 
 
 class DeviceManufacturerBase(BaseModel):
