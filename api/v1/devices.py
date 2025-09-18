@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 
-from models.device import DeviceType
+from models.device import Device, DeviceType
 from db.database import get_async_session
 from schemas.device import DeviceTypeRead, DeviceTypeCreate, DeviceTypeUpdate
 
@@ -38,5 +38,21 @@ async def read_device_type_by_name(device_type_name: str, session: AsyncSession 
 async def read_device_type_by_id(device_type_id: uuid.UUID, session: AsyncSession = Depends(get_async_session)):
     device_type = await device_crud.get_device_type(session, device_type_id)
     return device_type
+
+@router.patch("/types/{device_type_id}", response_model=DeviceTypeRead)
+async def update_user(device_type_id: uuid.UUID, device_type_in: DeviceTypeUpdate, session: AsyncSession = Depends(get_async_session)):
+    device_type = await device_crud.get_device_type(session, device_type_id)
+    if not device_type:
+        raise HTTPException(status_code=404, detail="Device type not found")
+    device_type = await device_crud.update_device_type(session, device_type, device_type_in)
+    return device_type
+
+@router.delete("/types/{device_type_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_user(device_type_id: uuid.UUID, session: AsyncSession = Depends(get_async_session)):
+    device_type = await device_crud.get_device_type(session, device_type_id)
+    if not device_type:
+        raise HTTPException(status_code=404, detail="Device type not found")
+    await device_crud.delete_device_type(session, device_type)
+    return None
 
 

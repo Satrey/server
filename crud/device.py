@@ -16,6 +16,7 @@ from schemas.device import DeviceManufacturerCreate, DeviceManufacturerUpdate, D
 
 async def get_device_type(db: AsyncSession, device_type_id: uuid.UUID) -> Optional[DeviceType]:
     result = await db.execute(select(DeviceType).filter(DeviceType.id == device_type_id))
+    print(result)
     return result.scalars().first()
 
 async def get_device_type_by_name(db: AsyncSession, name: str) -> Optional[DeviceType]:
@@ -33,23 +34,18 @@ async def create_device_type(db: AsyncSession, device_type_in: DeviceTypeCreate)
     await db.refresh(device_type)
     return device_type
 
-async def update_device_type(db: AsyncSession, device_type_id: uuid.UUID, name: Optional[str] = None) -> Optional[DeviceType]:
-    device_type = await get_device_type(db, device_type_id)
-    if not device_type:
-        return None
-    if name:
-        device_type.name = name
+async def update_device_type(db: AsyncSession, device_type: DeviceType, device_type_in: DeviceTypeUpdate) -> DeviceType:
+    if device_type_in.name is not None:
+        device_type.name = device_type_in.name
+
+    db.add(device_type)
     await db.commit()
     await db.refresh(device_type)
     return device_type
     
-async def delete_device_type(db: AsyncSession, device_type_id: uuid.UUID) -> bool:
-    device_type = await get_device_type(db, device_type_id)
-    if not device_type:
-        return False
+async def delete_device_type(db: AsyncSession, device_type: DeviceType):
     await db.delete(device_type)
-    await db.commit()
-    return True
+    await db.commit() 
 
 
 

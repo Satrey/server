@@ -39,8 +39,8 @@ class DeviceTypeCreate(DeviceTypeBase):
 
 
 class DeviceTypeUpdate(DeviceTypeBase):
-     pass
-
+    pass
+     
 
 class DeviceManufacturerBase(BaseModel):
     device_manufacturer: str
