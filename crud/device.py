@@ -6,13 +6,15 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 
-from models.device import Device, DeviceType, DeviceModel, DeviceManufacturer
+from models.devices import Device, DeviceType, DeviceModel, DeviceManufacturer
 
-from schemas.device import DeviceCreate, DeviceUpdate, DeviceRead
-from schemas.device import DeviceTypeCreate, DeviceTypeUpdate, DeviceTypeRead
-from schemas.device import DeviceModelCreate, DeviceModelUpdate, DeviceModelRead
-from schemas.device import DeviceManufacturerCreate, DeviceManufacturerUpdate, DeviceManufacturerRead
+from schemas.devices import DeviceCreate, DeviceUpdate, DeviceRead
+from schemas.devices import DeviceTypeCreate, DeviceTypeUpdate, DeviceTypeRead
+from schemas.devices import DeviceModelCreate, DeviceModelUpdate, DeviceModelRead
+from schemas.devices import DeviceManufacturerCreate, DeviceManufacturerUpdate, DeviceManufacturerRead
 
+
+# Функции для круд операций с DeviceType
 
 async def get_device_type(db: AsyncSession, device_type_id: uuid.UUID) -> Optional[DeviceType]:
     result = await db.execute(select(DeviceType).filter(DeviceType.id == device_type_id))
@@ -46,6 +48,17 @@ async def update_device_type(db: AsyncSession, device_type: DeviceType, device_t
 async def delete_device_type(db: AsyncSession, device_type: DeviceType):
     await db.delete(device_type)
     await db.commit() 
+
+
+# Функции для crud операций с DeviceModel
+
+
+# Функции для работы с DeviceManufacturer
+
+
+# Функции для работы с Device
+
+
 
 
 
