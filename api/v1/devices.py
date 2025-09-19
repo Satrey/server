@@ -1,58 +1,69 @@
 import uuid
-
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 
+from models.devices import Device
+from schemas.devices import DeviceResponse, DeviceCreate, DeviceUpdate
+import crud.devices as device_crud
 from db.database import get_async_session
-from models.devices import Device, DeviceType
-from schemas.devices import DeviceTypeRead, DeviceTypeCreate, DeviceTypeUpdate
-
-import crud.device as device_crud
-
 
 router = APIRouter(
     prefix='/devices',
-    tags=['Devices']
+    tags=['Устройства']
 )
 
-@router.post("/types", response_model=DeviceTypeRead, status_code=status.HTTP_201_CREATED)
-async def create_user(device_type_in: DeviceTypeCreate, session: AsyncSession = Depends(get_async_session)):
-    existing = await device_crud.get_device_type_by_name(session, device_type_in.name)
+# Создание устройства
+@router.post("/", response_model=DeviceResponse, status_code=status.HTTP_201_CREATED)
+async def create_device(device_in: DeviceCreate, session: AsyncSession = Depends(get_async_session)):
+    existing = await device_crud.get_device_by_inventary_number(session, device_in.inventary_number)
     if existing:
-        raise HTTPException(status_code=400, detail="User with this email already exists")
-    device_type = await device_crud.create_device_type(session, device_type_in)
-    return device_type
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Device with this inventary number already exists."
+        )
+    new_device = await device_crud.create_device(session, device_in)
+    return new_device
 
-@router.get("/types", response_model=List[DeviceTypeRead])
-async def read_device_types(skip: int = 0, limit: int = 100, session: AsyncSession = Depends(get_async_session)):
-    device_types = await device_crud.get_device_types(session, skip=skip, limit=limit)
-    return device_types
+# Получение списка устройств
+@router.get("/", response_model=List[DeviceResponse])
+async def read_devices(session: AsyncSession = Depends(get_async_session)):
+    devices = await device_crud.get_devices(session)
+    return devices
 
-@router.get("/types/by/{name}", response_model=DeviceTypeRead)
-async def read_device_type_by_name(device_type_name: str, session: AsyncSession = Depends(get_async_session)):
-    device_type = await device_crud.get_device_type_by_name(session, device_type_name)
-    return device_type
+# Получение устройства по ID
+@router.get("/{device_id}", response_model=DeviceResponse)
+async def read_device(device_id: uuid.UUID, session: AsyncSession = Depends(get_async_session)):
+    device = await device_crud.get_device(session, device_id)
+    if not device:
+        raise HTTPException(status_code=404, detail="Device not found")
+    return device
 
-@router.get("/types/{device_type_id}", response_model=DeviceTypeRead)
-async def read_device_type_by_id(device_type_id: uuid.UUID, session: AsyncSession = Depends(get_async_session)):
-    device_type = await device_crud.get_device_type(session, device_type_id)
-    return device_type
+# Обновление устройства полностью
+@router.put("/{device_id}", response_model=DeviceResponse)
+async def update_device(device_id: uuid.UUID, device_in: DeviceUpdate, session: AsyncSession = Depends(get_async_session)):
+    device = await device_crud.get_device(session, device_id)
+    if not device:
+        raise HTTPException(status_code=404, detail="Device not found")
+    updated_device = await device_crud.update_device(session, device_id, device_in)
+    return updated_device
 
-@router.patch("/types/{device_type_id}", response_model=DeviceTypeRead)
-async def update_user(device_type_id: uuid.UUID, device_type_in: DeviceTypeUpdate, session: AsyncSession = Depends(get_async_session)):
-    device_type = await device_crud.get_device_type(session, device_type_id)
-    if not device_type:
-        raise HTTPException(status_code=404, detail="Device type not found")
-    device_type = await device_crud.update_device_type(session, device_type, device_type_in)
-    return device_type
+# Частичное обновление устройства
+@router.patch("/{device_id}", response_model=DeviceResponse)
+async def partial_update_device(device_id: uuid.UUID, device_in: DeviceUpdate, session: AsyncSession = Depends(get_async_session)):
+    device = await device_crud.get_device(session, device_id)
+    if not device:
+        raise HTTPException(status_code=404, detail="Device not found")
+    updated_device = await device_crud.update_device(session, device_id, device_in)
+    return updated_device
 
-@router.delete("/types/{device_type_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_user(device_type_id: uuid.UUID, session: AsyncSession = Depends(get_async_session)):
-    device_type = await device_crud.get_device_type(session, device_type_id)
-    if not device_type:
-        raise HTTPException(status_code=404, detail="Device type not found")
-    await device_crud.delete_device_type(session, device_type)
-    return None
+# Удаление устройства
+@router.delete("/{device_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_device(device_id: uuid.UUID, session: AsyncSession = Depends(get_async_session)):
+    device = await device_crud.get_device(session, device_id)
+    if not device:
+        raise HTTPException(status_code=404, detail="Device not found")
+    await device_crud.delete_device(session, device_id)
+
 
 

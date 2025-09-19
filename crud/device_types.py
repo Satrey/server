@@ -1,17 +1,12 @@
-from typing import Optional
 import uuid
-from fastapi import HTTPException
+from typing import Optional
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 
-from models.devices import Device, DeviceType, DeviceModel, DeviceManufacturer
-
-from schemas.devices import DeviceCreate, DeviceUpdate, DeviceRead
-from schemas.devices import DeviceTypeCreate, DeviceTypeUpdate, DeviceTypeRead
-from schemas.devices import DeviceModelCreate, DeviceModelUpdate, DeviceModelRead
-from schemas.devices import DeviceManufacturerCreate, DeviceManufacturerUpdate, DeviceManufacturerRead
+from models.devices import DeviceType
+from schemas.devices import DeviceTypeCreate, DeviceTypeUpdate, DeviceTypeResponse
 
 
 # Функции для круд операций с DeviceType
@@ -48,17 +43,3 @@ async def update_device_type(db: AsyncSession, device_type: DeviceType, device_t
 async def delete_device_type(db: AsyncSession, device_type: DeviceType):
     await db.delete(device_type)
     await db.commit() 
-
-
-# Функции для crud операций с DeviceModel
-
-
-# Функции для работы с DeviceManufacturer
-
-
-# Функции для работы с Device
-
-
-
-
-
