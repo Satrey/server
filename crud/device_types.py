@@ -25,7 +25,7 @@ async def get_device_types(db: AsyncSession, skip: int = 0, limit: int = 100):
     return result.scalars().all()
 
 async def create_device_type(db: AsyncSession, device_type_in: DeviceTypeCreate):
-    device_type = DeviceType(name=device_type_in.name)
+    device_type = DeviceType(name=device_type_in.name.upper())
     db.add(device_type)
     await db.commit()
     await db.refresh(device_type)
@@ -33,7 +33,7 @@ async def create_device_type(db: AsyncSession, device_type_in: DeviceTypeCreate)
 
 async def update_device_type(db: AsyncSession, device_type: DeviceType, device_type_in: DeviceTypeUpdate) -> DeviceType:
     if device_type_in.name is not None:
-        device_type.name = device_type_in.name
+        device_type.name = device_type_in.name.upper()
 
     db.add(device_type)
     await db.commit()

@@ -7,21 +7,24 @@ from pydantic import BaseModel
 
 class DeviceModelBase(BaseModel):
     name: str
-    manufacturer_id: uuid.UUID
+
 
 class DeviceModelCreate(DeviceModelBase):
-    pass
+    manufacturer_id: uuid.UUID
+    device_type_id: uuid.UUID
 
 class DeviceModelUpdate(BaseModel):
     name: Optional[str] = None
     manufacturer_id: Optional[uuid.UUID] = None
+    device_type_id: Optional[uuid.UUID] = None
 
     class Config:
         orm_mode = True
 
 class DeviceModelResponse(DeviceModelBase):
     id: uuid.UUID
-    manufacturer: Optional['DeviceManufacturerResponse']  # вложенный объект
+    manufacturer_id: uuid.UUID  # вложенный объект
+    device_type_id: uuid.UUID
 
     class Config:
         orm_mode = True
@@ -73,8 +76,6 @@ class DeviceManufacturerResponse(DeviceManufacturerBase):
 
 class DeviceBase(BaseModel):
     inventary_number: str
-    type_id: uuid.UUID
-    manufacturer_id: uuid.UUID
     model_id: uuid.UUID
     rtobject_id: Optional[uuid.UUID] = None
 
@@ -83,8 +84,6 @@ class DeviceCreate(DeviceBase):
 
 class DeviceUpdate(BaseModel):
     inventary_number: Optional[str] = None
-    type_id: Optional[uuid.UUID] = None
-    manufacturer_id: Optional[uuid.UUID] = None
     model_id: Optional[uuid.UUID] = None
     rtobject_id: Optional[uuid.UUID] = None
 
@@ -93,8 +92,6 @@ class DeviceUpdate(BaseModel):
 
 class DeviceResponse(DeviceBase):
     id: uuid.UUID
-    device_type: Optional[DeviceTypeResponse]
-    manufacturer: Optional[DeviceManufacturerResponse]
     model: Optional[DeviceModelResponse]
     rtobject: Optional['RTObjectResponse']
 
@@ -109,7 +106,7 @@ class RTObjectBase(BaseModel):
     address: str
 
 class RTObjectCreate(RTObjectBase):
-    pass
+    devices: Optional[DeviceCreate]
 
 class RTObjectUpdate(BaseModel):
     number: Optional[int] = None
@@ -122,7 +119,7 @@ class RTObjectResponse(RTObjectBase):
     id: uuid.UUID
     number: int
     address: str
-    # devices: Optional[list] = []  # Можно указать список устройств
+    devices: Optional[DeviceResponse]
 
     class Config:
         orm_mode = True

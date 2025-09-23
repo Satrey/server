@@ -31,10 +31,8 @@ async def get_devices(db: AsyncSession, skip: int = 0, limit: int = 100):
     result = await db.execute(
         select(Device)
         .options(
-            selectinload(Device.device_type),
-            selectinload(Device.manufacturer),
             selectinload(Device.model),
-            selectinload(Device.rtobject),
+            selectinload(Device.rtobject)
         )
         .offset(skip)
         .limit(limit)
@@ -45,8 +43,8 @@ async def create_device(db: AsyncSession, device_in):
     # device_in: pydantic модель с inventary_number, type_id, manufacturer_id, model_id, rtobject_id (rtobject_id может быть None)
     device = Device(
         inventary_number=device_in.inventary_number,
-        type_id=device_in.type_id,
-        manufacturer_id=device_in.manufacturer_id,
+        # type_id=device_in.type_id,
+        # manufacturer_id=device_in.manufacturer_id,
         model_id=device_in.model_id,
         rtobject_id=device_in.rtobject_id,
     )

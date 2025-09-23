@@ -1,8 +1,8 @@
-"""Добавлены модели для устройств device.py
+"""Изменены модели дополнены связи от GPT
 
-Revision ID: e22910bef0e9
-Revises: c0688b417a68
-Create Date: 2025-09-16 13:31:03.264071
+Revision ID: 9e53b2f3a235
+Revises: a3983a61fee8
+Create Date: 2025-09-23 14:08:46.354752
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'e22910bef0e9'
-down_revision: Union[str, Sequence[str], None] = 'c0688b417a68'
+revision: str = '9e53b2f3a235'
+down_revision: Union[str, Sequence[str], None] = 'a3983a61fee8'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

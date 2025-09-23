@@ -24,23 +24,23 @@ async def get_device_manufacturers(db: AsyncSession, skip: int = 0, limit: int =
     return result.scalars().all()
 
 async def create_device_manufacturer(db: AsyncSession, manufacturer_in: DeviceManufacturerCreate) -> DeviceManufacturer:
-    manufacturer = DeviceManufacturer(name=manufacturer_in.name)
+    manufacturer = DeviceManufacturer(name=manufacturer_in.name.upper())
     
     db.add(manufacturer)
     await db.commit()
     await db.refresh(manufacturer)
     return manufacturer
 
-async def update_manufacturer(db: AsyncSession, manufacturer: DeviceManufacturer, manufacturer_in: DeviceManufacturerUpdate) -> DeviceManufacturer:
+async def update_device_manufacturer(db: AsyncSession, manufacturer: DeviceManufacturer, manufacturer_in: DeviceManufacturerUpdate) -> DeviceManufacturer:
     if manufacturer_in.name is not None:
-        manufacturer.name = manufacturer_in.name
+        manufacturer.name = manufacturer_in.name.upper()
 
     db.add(manufacturer)
     await db.commit()
     await db.refresh(manufacturer)
     return manufacturer
 
-async def delete_manufacturer(db: AsyncSession, manufacturer: DeviceManufacturer):
+async def delete_device_manufacturer(db: AsyncSession, manufacturer: DeviceManufacturer):
     await db.delete(manufacturer)
     await db.commit()
 
