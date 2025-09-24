@@ -3,7 +3,6 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 
-from models.devices import Device
 from schemas.devices import DeviceResponse, DeviceCreate, DeviceUpdate
 import crud.devices as device_crud
 from db.database import get_async_session

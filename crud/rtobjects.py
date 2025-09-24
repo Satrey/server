@@ -4,15 +4,15 @@ from fastapi import HTTPException
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.orm import selectinload
+from sqlalchemy.orm import selectinload, joinedload
 
-from models.devices import RTObject
+from models.devices import RTObject, Device
 
 
 # Функции для работы с RTObject
 
-async def get_rtobject(db: AsyncSession, rtobject_id: uuid.UUID) -> Optional[RTObject]:
-    result = await db.execute(select(RTObject).options(selectinload(RTObject.devices)).filter(RTObject.id == rtobject_id))
+async def get_rtobject(db: AsyncSession, rtobject_id: uuid.UUID):
+    result = await db.execute(select(RTObject)).filter(RTObject.id == rtobject_id)
     return result.scalars().first()
 
 async def get_rtobject_by_number(db: AsyncSession, rtobject_number: int):
@@ -21,6 +21,7 @@ async def get_rtobject_by_number(db: AsyncSession, rtobject_number: int):
 
 async def get_rtobjects(db: AsyncSession, skip: int = 0, limit: int = 100):
     result = await db.execute(select(RTObject).options(selectinload(RTObject.devices)).offset(skip).limit(limit))
+    print(result)
     return result.scalars().all()
 
 async def create_rtobject(db: AsyncSession, rtobject_in):  # rtobject_in с number и address

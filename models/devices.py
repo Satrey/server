@@ -41,10 +41,10 @@ class Device(Base, IDMixin, TimestampsMixin):
     inventary_number: Mapped[str] = mapped_column(String, unique=True, nullable=True)
 
     model_id: Mapped[uuid.UUID] = mapped_column(ForeignKey('devicemodels.id'), nullable=False)
-    rtobject_id: Mapped[uuid.UUID] = mapped_column(ForeignKey('rtobjects.id'), unique=True, nullable=True) 
+    rtobject_id: Mapped[uuid.UUID] = mapped_column(ForeignKey('rtobjects.id'), nullable=True) 
 
     model: Mapped['DeviceModel'] = relationship('DeviceModel', back_populates='devices')
-    rtobject: Mapped['RTObject'] = relationship('RTObject', back_populates='devices', uselist=False)
+    rtobject: Mapped['RTObject'] = relationship('RTObject', back_populates='devices', uselist=True)
 
     @property
     def device_type(self) -> 'DeviceType | None':
@@ -59,4 +59,4 @@ class RTObject(Base, IDMixin, TimestampsMixin):
 
     number: Mapped[int] = mapped_column(Integer, unique=True, nullable=False)
     address: Mapped[str] = mapped_column(String, unique=True, nullable=False)
-    devices: Mapped['Device'] = relationship('Device', back_populates='rtobject')
+    devices: Mapped['Device'] = relationship(back_populates='rtobject')

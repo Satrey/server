@@ -10,12 +10,10 @@ from models.devices import Device
 
 # Функции для работы с Device
 
-async def get_device(db: AsyncSession, device_id: uuid.UUID) -> Optional[Device]:
+async def get_device(db: AsyncSession, device_id: uuid.UUID):
     result = await db.execute(
         select(Device)
         .options(
-            selectinload(Device.device_type),
-            selectinload(Device.manufacturer),
             selectinload(Device.model),
             selectinload(Device.rtobject),
         )
@@ -43,8 +41,6 @@ async def create_device(db: AsyncSession, device_in):
     # device_in: pydantic модель с inventary_number, type_id, manufacturer_id, model_id, rtobject_id (rtobject_id может быть None)
     device = Device(
         inventary_number=device_in.inventary_number,
-        # type_id=device_in.type_id,
-        # manufacturer_id=device_in.manufacturer_id,
         model_id=device_in.model_id,
         rtobject_id=device_in.rtobject_id,
     )

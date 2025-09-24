@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 import uuid
 from pydantic import BaseModel
 
@@ -92,6 +92,7 @@ class DeviceUpdate(BaseModel):
 
 class DeviceResponse(DeviceBase):
     id: uuid.UUID
+    inventary_number: str
     model: Optional[DeviceModelResponse]
     rtobject: Optional['RTObjectResponse']
 
@@ -106,7 +107,7 @@ class RTObjectBase(BaseModel):
     address: str
 
 class RTObjectCreate(RTObjectBase):
-    devices: Optional[DeviceCreate]
+    pass
 
 class RTObjectUpdate(BaseModel):
     number: Optional[int] = None
@@ -117,9 +118,7 @@ class RTObjectUpdate(BaseModel):
 
 class RTObjectResponse(RTObjectBase):
     id: uuid.UUID
-    number: int
-    address: str
-    devices: Optional[DeviceResponse]
+    # devices: Optional[DeviceResponse]
 
     class Config:
         orm_mode = True
