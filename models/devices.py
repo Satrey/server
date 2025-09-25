@@ -1,4 +1,5 @@
 import uuid
+from typing import List
 from sqlalchemy import Integer, String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -44,7 +45,7 @@ class Device(Base, IDMixin, TimestampsMixin):
     rtobject_id: Mapped[uuid.UUID] = mapped_column(ForeignKey('rtobjects.id'), nullable=True) 
 
     model: Mapped['DeviceModel'] = relationship('DeviceModel', back_populates='devices')
-    rtobject: Mapped['RTObject'] = relationship('RTObject', back_populates='devices', uselist=True)
+    rtobjects: Mapped['RTObject'] = relationship('RTObject', back_populates='devices')
 
     @property
     def device_type(self) -> 'DeviceType | None':
@@ -59,4 +60,4 @@ class RTObject(Base, IDMixin, TimestampsMixin):
 
     number: Mapped[int] = mapped_column(Integer, unique=True, nullable=False)
     address: Mapped[str] = mapped_column(String, unique=True, nullable=False)
-    devices: Mapped['Device'] = relationship(back_populates='rtobject')
+    devices: Mapped[List['Device']] = relationship(back_populates='rtobjects')

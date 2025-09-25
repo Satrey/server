@@ -30,7 +30,7 @@ async def get_devices(db: AsyncSession, skip: int = 0, limit: int = 100):
         select(Device)
         .options(
             selectinload(Device.model),
-            selectinload(Device.rtobject)
+            selectinload(Device.rtobjects)
         )
         .offset(skip)
         .limit(limit)

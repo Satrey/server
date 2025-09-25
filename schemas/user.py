@@ -24,7 +24,7 @@ class Profile(ProfileBase):
     pass
 
     class Config:
-        orm_mode = True
+        from_attributes=True
 
 
 class UserBase(BaseModel):
@@ -50,7 +50,7 @@ class ProfileRead(BaseModel):
     phone: str
 
     class Config:
-        orm_mode = True
+        from_attributes=True
 
 class UserRead(BaseModel):
     id: uuid.UUID
@@ -58,4 +58,4 @@ class UserRead(BaseModel):
     profile: ProfileRead | None
 
     class Config:
-        orm_mode = True
+        from_attributes=True

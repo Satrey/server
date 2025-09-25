@@ -19,7 +19,7 @@ class DeviceModelUpdate(BaseModel):
     device_type_id: Optional[uuid.UUID] = None
 
     class Config:
-        orm_mode = True
+        from_attributes=True
 
 class DeviceModelResponse(DeviceModelBase):
     id: uuid.UUID
@@ -27,7 +27,7 @@ class DeviceModelResponse(DeviceModelBase):
     device_type_id: uuid.UUID
 
     class Config:
-        orm_mode = True
+        from_attributes=True
 
 # Схемы для работы с DeviceType
 
@@ -41,13 +41,14 @@ class DeviceTypeUpdate(BaseModel):
     name: Optional[str] = None
 
     class Config:
-        orm_mode = True
+        from_attributes=True
 
 class DeviceTypeResponse(DeviceTypeBase):
     id: uuid.UUID
+    name: str
 
     class Config:
-        orm_mode = True
+        from_attributes=True
      
 
 
@@ -63,13 +64,14 @@ class DeviceManufacturerUpdate(BaseModel):
     name: Optional[str] = None
 
     class Config:
-        orm_mode = True
+        from_attributes=True
 
 class DeviceManufacturerResponse(DeviceManufacturerBase):
     id: uuid.UUID
+    name: str
 
     class Config:
-        orm_mode = True
+        from_attributes=True
 
 
 # Схемы для работы с Device
@@ -88,16 +90,15 @@ class DeviceUpdate(BaseModel):
     rtobject_id: Optional[uuid.UUID] = None
 
     class Config:
-        orm_mode = True
+        from_attributes=True
 
 class DeviceResponse(DeviceBase):
     id: uuid.UUID
     inventary_number: str
     model: Optional[DeviceModelResponse]
-    rtobject: Optional['RTObjectResponse']
 
     class Config:
-        orm_mode = True
+        from_attributes=True
 
 
 # Схемы для работы с RTObject
@@ -114,11 +115,11 @@ class RTObjectUpdate(BaseModel):
     address: Optional[str] = None
 
     class Config:
-        orm_mode = True
+        from_attributes=True
 
 class RTObjectResponse(RTObjectBase):
     id: uuid.UUID
-    # devices: Optional[DeviceResponse]
+    devices: Optional[list[DeviceResponse]]
 
     class Config:
-        orm_mode = True
+        from_attributes=True
